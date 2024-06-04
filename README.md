@@ -1,70 +1,25 @@
-# Getting Started with Create React App
+# Stories Made Simple
+created by Nicole Honl
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Link: TBD
 
-## Available Scripts
+## About:
+The Stories Made Simple web application provides a place for writers to easily plot out their stories using a selection of plotting methods. This application is educational as well as functional. The user is able to select how many books the plot covers, what genre, the desired word count per book as well as the desired word count average per chapter, and then have all their books laid out by big picture all the way down to per chapter. Once the plot framework is laid out, the user may enter plot information into each spot and consolidate this information to be printed out.
 
-In the project directory, you can run:
+## Future Goals:
+  - [ ] Making user profiles where each writer can display their Author Biography and published works.
+  - [ ] The ability to "friend" other users.
+  - [ ] Plot Building Collaberation between users.
+  - [ ] Plot review and commentary by selected users only.
 
-### `npm start`
+## Demo:
+Video to be provided
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## How to Clone:
+https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## API Used:
+API was created internally
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Requirements:
+TBD
