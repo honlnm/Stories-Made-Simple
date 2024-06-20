@@ -21,7 +21,7 @@ function LoginForm({ login }) {
         evt.preventDefault();
         let result = await login(formData);
         if (result.success) {
-            history.push(`/user/${result.user.id}`);
+            history.push(`/dashboard`);
         } else {
             setFormErrors(result.errors);
         }
