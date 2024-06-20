@@ -29,13 +29,13 @@ class StoriesMadeSimpleApi {
     /** Get token for login from username, password. */
     static async login(data) {
         let res = await this.request(`auth/token`, data, "post");
-        return res.access_token;
+        return res.token;
     }
 
     /** Signup for site. */
     static async signup(data) {
-        let res = await this.request(`auth/register`, data, "post");
-        return res.access_token;
+        let res = await this.request(`auth/signup`, data, "post");
+        return res.token;
     }
 
     /**Get the current user */
@@ -50,6 +50,14 @@ class StoriesMadeSimpleApi {
         return res.user;
     }
 
+    /**Get Plottig Frameworks, filtered by name if not undefined */
+
+    /**Get Plot Points from Framework */
+
+    /**Get Series Types, filtered by name if not undefined */
+
+    /**Get Genres, filtered by name if not undefined */
+
     /**Get current user's plots */
     static async getCurrentUserPlots(username) {
         let res = await this.request(``)
@@ -57,11 +65,14 @@ class StoriesMadeSimpleApi {
     }
 
     /**Get current user's plot point from user's plot */
-    /**Get Plottig Frameworks, filtered by name if not undefined */
-    /**Get Plot Points from Framework */
-    /**Get Series Types, filtered by name if not undefined */
-    /**Get Genres, filtered by name if not undefined */
+    static async getPlotPoints(username, plot_id) {
+        let res = await this.request(``)
+        return res.plot_points;
+    }
+
     /**Create Series/Plot(s) */
+
+
 }
 
 export default StoriesMadeSimpleApi;

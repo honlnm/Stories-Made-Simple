@@ -4,10 +4,10 @@ from flask import (
     request,
     jsonify
 )
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token
 from sqlalchemy.exc import IntegrityError
+from jsonschema import validate, ValidationError
 from models import db, User
+from helpers.tokens import create_token
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -16,6 +16,36 @@ CURR_USER_KEY = "curr_user"
 def do_login(user):
     session[CURR_USER_KEY] = user.id
     session.permanent = True
+
+user_auth_schema = {
+    "type": "object",
+    "properties": {
+        "username": {"type": "string"},
+        "password": {"type": "string"}
+    },
+    "required": ["username", "password"]
+}
+
+@auth_bp.route("/token", methods=["POST"])
+def token():
+    try:
+        validate(instance=request.json, schema=user_auth_schema)
+    except ValidationError as e:
+        return jsonify({"error": e.message}), 400
+
+    try:
+        username = request.json.get('username')
+        password = request.json.get('password')
+        user = User.authenticate(username, password)
+        
+        if not user:
+            return jsonify({"error": "Invalid username or password"}), 401
+        
+        token = create_token(user)
+        return jsonify({"token": token,"user": {"id": user.id, "username": user.username}}), 200
+    except Exception as err:
+        return jsonify({"error": str(err)}), 500
+
 
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
@@ -40,19 +70,5 @@ def signup():
     except IntegrityError:
         return jsonify({"error": "Username or email already taken"}), 400
 
-    access_token = create_access_token(identity=user.id)
-    return jsonify({"message": "User created successfully", "access_token": access_token, "user": {"id": user.id, "username": user.username}}), 201
-
-@auth_bp.route("/login", methods=["POST"])
-def login():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-
-    user = User.query.filter_by(username=username).first()
-
-    if user and check_password_hash(user.password, password):
-        access_token = create_access_token(identity=user.id)
-        return jsonify({"access_token": access_token, "user": {"id": user.id, "username": user.username}}), 200
-    else:
-        return jsonify({"error": "Invalid credentials"}), 401
+    token = create_token(user)
+    return jsonify({"message": "User created successfully", "token": token, "user": {"id": user.id, "username": user.username}}), 201
