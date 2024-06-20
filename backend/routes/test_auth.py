@@ -27,9 +27,29 @@ class AuthTestCase(TestCase):
 
             self.assertEqual(res.status_code, 201)
 
+    def test_signup_validation(self):
+        with self.app.test_client() as client:
+            res = client.post('/auth/signup', data={'username': 'testuser', 'email': 'testuser@gmail.com'})
+
+            self.assertEqual(res.status_code, 400)
+            self.assertEqual(res.error, "Missing required fields")
+
+    def test_invalid_signup(self):
+        with self.app.test_client() as client:
+            res = client.post('/auth/signup', data={'username': 'testuser', 'password': 'abc123', 'email': 'testuser@gmail.com'})
+
+            self.assertEqual(res.status_code, 400)
+            self.assertEqual(res.error, "Username or email already taken")
+
     def test_login(self):
         with self.app.test_client() as client:
             res = client.post('/auth/token', data={'username': 'testuser', 'password': 'abc123'})
 
             self.assertEqual(res.status_code, 200)
 
+    def test_invalid_login(self):
+        with self.app.test_client() as client:
+            res = client.post('/auth/token', data={'username': 'testuser', 'password': 'invalid'})
+
+            self.assertEqual(res.status_code, 401)
+            self.assertEqual(res.error, "Invalid username or password")

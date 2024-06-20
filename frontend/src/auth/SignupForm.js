@@ -22,7 +22,6 @@ function SignupForm({ signup }) {
         evt.preventDefault();
         let result = await signup(formData);
         if (result.success) {
-            setUser(result.user);
             navigate(`/user/${result.user.id}`);
         } else {
             setFormErrors(result.errors);
