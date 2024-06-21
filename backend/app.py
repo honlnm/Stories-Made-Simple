@@ -19,6 +19,7 @@ from flask_cors import CORS
 from models import db, connect_db, User
 from routes.auth import auth_bp
 from routes.user import user_bp
+from routes.plot import plot_bp
 
 
 app = Flask(__name__)
@@ -41,6 +42,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(plot_bp)
 
 connect_db(app)
 with app.app_context():

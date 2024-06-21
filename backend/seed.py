@@ -39,7 +39,7 @@ def seed_data():
 
         #---------------------------------------------------------
         # Insert Series Type data
-        s1 = SeriesType(name="Novel", num_of_books=1)
+        s1 = SeriesType(name="Monology", num_of_books=1)
         s2 = SeriesType(name="Duology", num_of_books=2)
         s3 = SeriesType(name="Trilogy", num_of_books=3)
         s4 = SeriesType(name="Quartet", num_of_books=4)
