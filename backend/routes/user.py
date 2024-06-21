@@ -35,7 +35,6 @@ def edit_user(user_id):
 
     if User.authenticate(username=username, password=password):
         user.username = username
-        user.password = password
         user.email = email
         db.session.commit()
         return jsonify({"message": f"{user.username} updated successfully", "user": {"id": user.id, "username": user.username, "email": user.email}}), 201

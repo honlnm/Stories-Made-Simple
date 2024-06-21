@@ -39,14 +39,14 @@ class StoriesMadeSimpleApi {
     }
 
     /**Get the current user */
-    static async getCurrentUser(username) {
-        let res = await this.request(`users/${username}`);
+    static async getCurrentUser(user_id) {
+        let res = await this.request(`users/${user_id}`);
         return res.user;
     }
 
     /** Update user profile info */
-    static async updateProfile(username, data) {
-        let res = await this.request(`users/${username}/edit`, data, "patch");
+    static async updateProfile(user_id, data) {
+        let res = await this.request(`users/${user_id}/edit`, data, "patch");
         return res.user;
     }
 

@@ -42,6 +42,7 @@ def token():
             return jsonify({"error": "Invalid username or password"}), 401
         
         token = create_token(user)
+        do_login(user)
         return jsonify({"token": token,"user": {"id": user.id, "username": user.username}}), 200
     except Exception as err:
         return jsonify({"error": str(err)}), 500
@@ -71,4 +72,5 @@ def signup():
         return jsonify({"error": "Username or email already taken"}), 400
 
     token = create_token(user)
+    do_login(user)
     return jsonify({"message": "User created successfully", "token": token, "user": {"id": user.id, "username": user.username}}), 201
