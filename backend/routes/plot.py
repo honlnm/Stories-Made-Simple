@@ -82,7 +82,8 @@ def show_plot(user_id, plot_id):
                              "user_id": plot.user_id,
                              "genre_id": plot.genre_id}}), 201
 
-@plot_bp.route("/<int:user_id>/<int:plot_id>/delete")
+
+@plot_bp.route("/<int:user_id>/<int:plot_id>/delete", methods=["POST"])
 def delete_plot(user_id, plot_id):
     plots_for_user = Plot.query.filter_by(user_id=user_id).all()
     plot_ids = [plot.id for plot in plots_for_user]

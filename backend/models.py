@@ -121,6 +121,15 @@ class PlotPoints(db.Model):
     plot_id = db.Column(db.Integer, db.ForeignKey("plot.id", ondelete="cascade"))
     plot_point_id = db.Column(db.Integer, db.ForeignKey("plotting_points.id", ondelete="cascade"))
     plot_text = db.Column(db.Text, nullable=True)
+#     chapters = db.relationship("Chapter")
+
+# class Chapter(db.Model):
+#     __tablename__ = "chapters"
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     title = db.Column(db.Text, nullable=True)
+#     ch_text = db.Column(db.Text, nullable=True)
+#     plot_point_id = db.Column(db.Integer, db.ForeignKey("plot_points.id", ondelete="cascade"))
+    
 
 ############## CONNECT DB ##############
 

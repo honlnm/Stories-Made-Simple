@@ -21,35 +21,35 @@ class AuthTestCase(TestCase):
             db.session.remove()
             db.drop_all()
 
-    def test_signup(self):
+    def test_01_signup(self):
         with self.app.test_client() as client:
-            res = client.post('/auth/signup', data={'username': 'testuser', 'password': 'abc123', 'email': 'testuser@gmail.com'})
+            res = client.post('/auth/signup', json={'username': 'testuser', 'password': 'abc123', 'email': 'testuser@gmail.com'}, content_type='application/json')
 
             self.assertEqual(res.status_code, 201)
 
-    def test_signup_validation(self):
+    def test_02_signup_validation(self):
         with self.app.test_client() as client:
-            res = client.post('/auth/signup', data={'username': 'testuser', 'email': 'testuser@gmail.com'})
+            res = client.post('/auth/signup', json={'username': 'testuser', 'email': 'testuser@gmail.com'}, content_type='application/json')
 
             self.assertEqual(res.status_code, 400)
-            self.assertEqual(res.error, "Missing required fields")
+            self.assertIn(b"Missing required fields", res.data)
 
-    def test_invalid_signup(self):
+    def test_03_invalid_signup(self):
         with self.app.test_client() as client:
-            res = client.post('/auth/signup', data={'username': 'testuser', 'password': 'abc123', 'email': 'testuser@gmail.com'})
+            res = client.post('/auth/signup', json={'username': 'testuser', 'password': 'abc123', 'email': 'testuser@gmail.com'}, content_type='application/json')
 
             self.assertEqual(res.status_code, 400)
-            self.assertEqual(res.error, "Username or email already taken")
+            self.assertIn(b"Username or email already taken", res.data)
 
-    def test_login(self):
+    def test_04_login(self):
         with self.app.test_client() as client:
-            res = client.post('/auth/token', data={'username': 'testuser', 'password': 'abc123'})
+            res = client.post('/auth/token', json={'username': 'testuser', 'password': 'abc123'}, content_type='application/json')
 
             self.assertEqual(res.status_code, 200)
 
-    def test_invalid_login(self):
+    def test_05_invalid_login(self):
         with self.app.test_client() as client:
-            res = client.post('/auth/token', data={'username': 'testuser', 'password': 'invalid'})
+            res = client.post('/auth/token', json={'username': 'testuser', 'password': 'invalid'}, content_type='application/json')
 
             self.assertEqual(res.status_code, 401)
-            self.assertEqual(res.error, "Invalid username or password")
+            self.assertIn(b"Invalid username or password", res.data)
