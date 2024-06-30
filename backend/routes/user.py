@@ -38,6 +38,7 @@ def edit_user(user_id):
         user.email = email
         db.session.commit()
         return jsonify({"message": f"{user.username} updated successfully", "user": {"id": user.id, "username": user.username, "email": user.email}}), 201
+    return jsonify({"error": "Authentication failed"}), 400
     
 @user_bp.route("/<int:user_id>/delete", methods=["POST"])
 def delete_user(user_id):
@@ -55,4 +56,5 @@ def delete_user(user_id):
         db.session.delete(user)
         db.session.commit()
         return jsonify({"message": "User deleted successfully"}), 201
+    return jsonify({"error": "Authentication failed"}), 400
     
