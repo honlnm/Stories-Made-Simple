@@ -34,7 +34,7 @@ def create_plot(user_id, plot_id):
     if not data or not num_of_books or not book_num or not book_title or not series_title or not book_word_count or not avg_words_per_chapter or not framework_id or not series_type_id or not genre_id:
         return jsonify({"error": "Missing required fields"}), 400
     
-    if not  last_updated:
+    if not last_updated:
         return jsonify({"error": "Missing 'last updated' field, please contact site administrator."}), 500
 
     plot = Plot.create(
@@ -61,6 +61,18 @@ def create_plot(user_id, plot_id):
     return jsonify({"message": "Plot created successfully", "plot": {"plot_id": plot.id}}), 201
 
 
+@plot_bp.route("/<int:user_id>")
+def show_plot_list(user_id):
+    plots_for_user = Plot.query.filter_by(user_id=user_id).all()
+    if user_id != g.user.id:
+        return jsonify({"error": "Unauthorized"}), 401
+    if plots_for_user == None:
+        return jsonify({"message": "No plots created yet."})
+    for plot in plots_for_user:
+        return jsonify({"plots": {"id": plot.id,
+                                  "book_title": plot.book_title,
+                                  "series_title": plot.series_title}}), 200
+
 @plot_bp.route("/<int:user_id>/<int:plot_id>")
 def show_plot(user_id, plot_id):
     plots_for_user = Plot.query.filter_by(user_id=user_id).all()
@@ -82,6 +94,48 @@ def show_plot(user_id, plot_id):
                              "user_id": plot.user_id,
                              "genre_id": plot.genre_id}}), 201
 
+@plot_bp.route("/<int:user_id>/<int:plot_id>/edit", methods=["POST"])
+def edit_plot(user_id, plot_id):
+    plots_for_user = Plot.query.filter_by(user_id=user_id).all()
+    plot_ids = [plot.id for plot in plots_for_user]
+    if user_id != g.user.id:
+        return jsonify({"error": "Unauthorized"}), 401
+    if plot_id not in plot_ids:
+        return jsonify({"error": "Plot does not exist for user"}), 404
+    data = request.json
+    plot = Plot.query.get_or_404(plot_id)
+    if 'num_of_books' in data:
+        plot.num_of_books = data['num_of_books']
+    if 'book_num' in data:
+        plot.book_num = data['book_num']
+    if 'book_title' in data:
+        plot.book_title = data['book_title']
+    if 'series_title' in data:
+        plot.series_title = data['series_title']
+    if 'book_word_count' in data:
+        plot.book_word_count = data['book_word_count']
+    if 'avg_words_per_chapter' in data:
+        plot.avg_words_per_chapter = data['avg_words_per_chapter']
+    if 'last_updated' in data:
+        plot.last_updated = data['last_updated']
+    if 'framework_id' in data:
+        plot.framework_id = data['framework_id']
+    if 'series_type_id' in data:
+        plot.series_type_id = data['series_type_id']
+    if 'genre_id' in data:
+        plot.genre_id = data['genre_id']
+    if 'plot_points' in data:
+        plot_points_data = data['plot_points']
+        for point_data in plot_points_data:
+            point_id = point_data.get('id')
+            point = PlotPoints.query.get(point_id)
+            if point and point.plot_id == plot_id:
+                if 'point_title' in point_data:
+                    point.point_title = point_data['point_title']
+                if 'point_description' in point_data:
+                    point.point_description = point_data['point_description']
+    db.session.commit()
+    return jsonify({"message": "Plot and plot points updated successfully"}), 200
 
 @plot_bp.route("/<int:user_id>/<int:plot_id>/delete", methods=["POST"])
 def delete_plot(user_id, plot_id):
@@ -94,3 +148,4 @@ def delete_plot(user_id, plot_id):
     plot = Plot.query.get_or_404(plot_id)
     db.session.delete(plot)
     db.session.commit()
+    return jsonify({"message": "Plot deleted successfully"}), 200

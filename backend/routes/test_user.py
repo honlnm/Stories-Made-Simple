@@ -15,6 +15,8 @@ class UserTestCase(TestCase):
         cls.app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
         cls.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///stories_test'
         with cls.app.app_context():
+            db.session.query(User).delete()
+            db.session.commit()
             db.create_all()
             cls.client.post('/auth/signup', json={'username': 'testuser', 'password': 'abc123', 'email': 'testuser@gmail.com'}, content_type='application/json')
             db.session.commit()

@@ -15,9 +15,6 @@ function PlotList() {
         "formErrors=", formErrors,
     );
 
-
-
-
     return (
         <div className="col-md-6 col-lg-4 offset-md-3 offset-lg-4">
             <h3>Dashboard</h3>
