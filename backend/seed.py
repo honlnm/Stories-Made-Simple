@@ -335,5 +335,4 @@ def seed_data():
         # https://www.campfirewriting.com/learn/three-act-structure
 
 
-if __name__ == '__main__':
-    seed_data()
+seed_data()

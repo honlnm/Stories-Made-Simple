@@ -13,9 +13,16 @@ plot_bp = Blueprint("plot", __name__, url_prefix="/plot")
 def get_plotting_point_ids_for_framework(framework_id):
     plotting_points = PlottingPoint.query.filter_by(framework_id=framework_id).all()
     return [point.id for point in plotting_points]
+
+def create_plot_points(framework_id, plot_id):
+    plotting_point_ids_arr = get_plotting_point_ids_for_framework(framework_id)
+    for plot_point_id in plotting_point_ids_arr:
+        point = PlotPoints(plot_id, plot_point_id)
+        db.session.add(point)
+    db.session.commit()
     
 @plot_bp.route("<int:user_id>/create", methods=["POST"])
-def create_plot(user_id, plot_id):
+def create_plot(user_id):
     if user_id != g.user.id:
         return jsonify({"error": "Unauthorized"}), 401
     
@@ -34,9 +41,6 @@ def create_plot(user_id, plot_id):
     if not data or not num_of_books or not book_num or not book_title or not series_title or not book_word_count or not avg_words_per_chapter or not framework_id or not series_type_id or not genre_id:
         return jsonify({"error": "Missing required fields"}), 400
     
-    if not last_updated:
-        return jsonify({"error": "Missing 'last updated' field, please contact site administrator."}), 500
-
     plot = Plot.create(
         user_id=user_id,
         num_of_books=num_of_books,
@@ -52,11 +56,7 @@ def create_plot(user_id, plot_id):
     )
     db.session.commit()
 
-    plotting_point_ids_arr = get_plotting_point_ids_for_framework(framework_id)
-    for plot_point_id in plotting_point_ids_arr:
-        point = PlotPoints(plot_id, plot_point_id)
-        db.session.add(point)
-    db.session.commit()
+    create_plot_points(framework_id, plot.id)
 
     return jsonify({"message": "Plot created successfully", "plot": {"plot_id": plot.id}}), 201
 
@@ -72,6 +72,7 @@ def show_plot_list(user_id):
         return jsonify({"plots": {"id": plot.id,
                                   "book_title": plot.book_title,
                                   "series_title": plot.series_title}}), 200
+    return jsonify({"message": "No plots created"}), 400
 
 @plot_bp.route("/<int:user_id>/<int:plot_id>")
 def show_plot(user_id, plot_id):
@@ -92,7 +93,7 @@ def show_plot(user_id, plot_id):
                              "framework_id": plot.framework_id,
                              "series_type_id": plot.series_type_id,
                              "user_id": plot.user_id,
-                             "genre_id": plot.genre_id}}), 201
+                             "genre_id": plot.genre_id}}), 200
 
 @plot_bp.route("/<int:user_id>/<int:plot_id>/edit", methods=["POST"])
 def edit_plot(user_id, plot_id):
@@ -129,11 +130,9 @@ def edit_plot(user_id, plot_id):
         for point_data in plot_points_data:
             point_id = point_data.get('id')
             point = PlotPoints.query.get(point_id)
-            if point and point.plot_id == plot_id:
-                if 'point_title' in point_data:
-                    point.point_title = point_data['point_title']
-                if 'point_description' in point_data:
-                    point.point_description = point_data['point_description']
+            if point.plot_id == plot_id:
+                if 'point_text' in point_data:
+                    point.point_text = point_data['point_text']
     db.session.commit()
     return jsonify({"message": "Plot and plot points updated successfully"}), 200
 

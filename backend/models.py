@@ -1,5 +1,6 @@
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 bcrypt = Bcrypt()
 db = SQLAlchemy(session_options={"expire_on_commit": False})
@@ -78,7 +79,7 @@ class Plot(db.Model):
     series_title=db.Column(db.Text, nullable=False, default="Not Applicable")
     book_word_count=db.Column(db.Integer, nullable=False)
     avg_words_per_chapter=db.Column(db.Integer, nullable=False)
-    last_updated = db.Column(db.DateTime, nullable=False)
+    last_updated = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
     framework_id = db.Column(db.Integer, db.ForeignKey("plotting_frameworks.id", ondelete="cascade"))
     series_type_id = db.Column(db.Integer, db.ForeignKey("series_types.id", ondelete="cascade"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"))
@@ -122,6 +123,11 @@ class PlotPoints(db.Model):
     plot_point_id = db.Column(db.Integer, db.ForeignKey("plotting_points.id", ondelete="cascade"))
     plot_text = db.Column(db.Text, nullable=True)
 #     chapters = db.relationship("Chapter")
+
+    def __init__(self, plot_id, plot_point_id, point_text=None):
+        self.plot_id = plot_id
+        self.plot_point_id = plot_point_id
+        self.point_text = point_text
 
 # class Chapter(db.Model):
 #     __tablename__ = "chapters"

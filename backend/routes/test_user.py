@@ -35,40 +35,41 @@ class UserTestCase(TestCase):
     def tearDown(self):
         self.app_context.pop()
 
-    def test_show_user_unauthorized(self):
+    def test_01_show_user_unauthorized(self):
         response = self.client.get(f'/user/999')
         self.assertEqual(response.status_code, 401)
         self.assertIn(b"Unauthorized", response.data)
 
     @patch('flask.g')
-    def test_show_user_authorized(self, mock_g):
+    def test_02_show_user_authorized(self, mock_g):
         mock_g.user = self.mock_user
         response = self.client.get(f'/user/{self.mock_user.id}')
         self.assertEqual(response.status_code, 201)
         self.assertIn(b"testuser", response.data)
 
     @patch('flask.g')
-    def test_edit_user_unauthorized(self, mock_g):
+    def test_03_edit_user_unauthorized(self, mock_g):
         response = self.client.post(f'/user/999/edit', json={"username": "testuser", "password": "password123", "email": "newemail@example.com"})
         self.assertEqual(response.status_code, 401)
         self.assertIn(b"Unauthorized", response.data)
 
     @patch('flask.g')
-    def test_edit_user_authorized(self, mock_g):
+    def test_04_edit_user_authorized(self, mock_g):
         mock_g.user = self.mock_user
-        response = self.client.post(f'/user/{self.mock_user.id}/edit', json={"username": "testuser", "password": "password123", "email": "newemail@example.com"})
+        response = self.client.post(f'/user/{self.mock_user.id}/edit', json={"username": "testuser1", "password": "abc123", "email": "testuser@gmail.com"})
         self.assertEqual(response.status_code, 201)
         self.assertIn(b"updated successfully", response.data)
 
     @patch('flask.g')
-    def test_delete_user_unauthorized(self, mock_g):
-        response = self.client.post(f'/user/999/delete', json={"username": "testuser", "password": "password123"})
+    def test_05_delete_user_unauthorized(self, mock_g):
+        response = self.client.post(f'/user/999/delete', json={"password": "password123"})
         self.assertEqual(response.status_code, 401)
         self.assertIn(b"Unauthorized", response.data)
 
     @patch('flask.g')
-    def test_delete_user_authorized(self, mock_g):
+    def test_06_delete_user_authorized(self, mock_g):
+        self.mock_user = User.query.filter_by(username="testuser1").first()
         mock_g.user = self.mock_user
-        response = self.client.post(f'/user/{self.mock_user.id}/delete', json={"username": "testuser", "password": "password123"})
+        response = self.client.post(f'/user/{self.mock_user.id}/delete', json={"password": "abc123"})
         self.assertEqual(response.status_code, 201)
         self.assertIn(b"User deleted successfully", response.data)

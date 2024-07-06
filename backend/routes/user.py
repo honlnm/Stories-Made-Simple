@@ -33,7 +33,7 @@ def edit_user(user_id):
     password = data.get('password')
     email = data.get('email')
 
-    if User.authenticate(username=username, password=password):
+    if User.authenticate(username=user.username, password=password):
         user.username = username
         user.email = email
         db.session.commit()
@@ -47,11 +47,9 @@ def delete_user(user_id):
     user = User.query.get_or_404(user_id)
 
     data = request.json
-
-    username = data.get('username')
     password = data.get('password')
 
-    if User.authenticate(username=username, password=password):
+    if User.authenticate(username=user.username, password=password):
         do_logout(user.id)
         db.session.delete(user)
         db.session.commit()
